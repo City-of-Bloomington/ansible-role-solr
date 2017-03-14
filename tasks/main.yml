@@ -10,3 +10,4 @@
 
 - include: install.yml
   when: solr_service.stat.exists == False
+...
