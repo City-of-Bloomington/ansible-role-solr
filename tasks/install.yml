@@ -5,7 +5,7 @@
     dest: "{{ solr_workspace }}/{{ solr_filename }}.tgz"
     force: no
 
-- name: Expand Solr.
+- name: "Expand Solr"
   unarchive:
     src:     "{{ solr_workspace }}/{{ solr_filename }}.tgz"
     dest:    "{{ solr_workspace }}"
@@ -17,7 +17,7 @@
     path: "{{ solr_install_dir }}"
     state: directory
 
-- name: Run Solr installation script.
+- name: "Run Solr installation script"
   shell: >
     {{ solr_workspace }}/{{ solr_filename }}/bin/install_solr_service.sh
     {{ solr_workspace }}/{{ solr_filename }}.tgz

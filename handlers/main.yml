@@ -1,5 +1,5 @@
 ---
-- name: restart solr
+- name: solr_restart
   service:
     name: solr
     state: restarted
