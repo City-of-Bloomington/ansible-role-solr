@@ -1,27 +1,33 @@
 ---
-- name: Download Solr
-  get_url:
+- name: 'Download Solr'
+  ansible.builtin.get_url:
     url:  "{{ solr_download_url }}"
     dest: "{{ solr_workspace }}/{{ solr_filename }}.tgz"
-    force: no
+    force: 'no'
 
 - name: "Expand Solr"
-  unarchive:
+  ansible.builtin.unarchive:
     src:     "{{ solr_workspace }}/{{ solr_filename }}.tgz"
     dest:    "{{ solr_workspace }}"
     creates: "{{ solr_workspace }}/{{ solr_filename }}/CHANGES.txt"
-    copy: no
+    copy:    'no'
 
-- name: Create Solr installation directory
-  file:
-    path: "{{ solr_install_dir }}"
-    state: directory
+- name: 'Create Solr installation directory'
+  ansible.builtin.file:
+    path:  "{{ solr_install_dir }}"
+    state: 'directory'
 
 - name: "Run Solr installation script"
-  shell: >
+  ansible.builtin.shell: >
     {{ solr_workspace }}/{{ solr_filename }}/bin/install_solr_service.sh
     {{ solr_workspace }}/{{ solr_filename }}.tgz
     -i {{ solr_install_dir }}
     -d {{ solr_home }}
     creates={{ solr_install_dir }}/solr/bin/solr
+
+- name: 'Install Solr.xml'
+  ansible.builtin.copy:
+    src:  'solr.xml'
+    dest: "{{ solr_home }}/data/solr.xml"
+  notify: 'solr_restart'
 ...

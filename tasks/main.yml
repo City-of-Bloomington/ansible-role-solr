@@ -1,13 +1,22 @@
 ---
 - name: "Install Java"
-  apt:
-    name: default-jre
-    state: present
+  ansible.builtin.apt:
+    name:  'default-jre'
+    state: 'present'
 
-- name: Check if Solr is already installed
-  stat: path=/etc/init.d/solr
-  register: solr_service
+- name: 'Check if Solr is already installed'
+  ansible.builtin.stat:
+    path: '/etc/init.d/solr'
+  register: 'solr_service'
 
-- include: install.yml
+- name: 'Install Solr'
+  ansible.builtin.include_tasks:
+    file: 'install.yml'
   when: solr_service.stat.exists == False
+
+- name: 'Apache Configuration'
+  ansible.builtin.copy:
+    src:  'apache.conf'
+    dest: '/etc/apache2/sites-enabled/conf.d/solr.conf'
+  notify: 'apache_restart'
 ...
