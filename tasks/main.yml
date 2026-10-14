@@ -24,6 +24,13 @@
     dest: '/etc/apache2/sites-enabled/conf.d/solr.conf'
   notify: 'apache_restart'
 
+- name: 'Disable Solr Request Log'
+  community.general.ini_file:
+    path:   '/etc/default/solr.in.sh'
+    option: 'SOLR_REQUESTLOG_ENABLED'
+    value:  'false'
+  notify: 'solr_restart'
+
 - name: 'Gzip log files'
   community.general.xml:
     path:  '/srv/solr/log4j2.xml'
