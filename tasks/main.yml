@@ -1,8 +1,12 @@
 ---
-- name: "Install Java"
+- name: "Install Dependencies"
   ansible.builtin.apt:
-    name:  'default-jre'
+    name: "{{ packages }}"
     state: 'present'
+  vars:
+    packages:
+      - 'default-jre'
+      - 'python3-lxml'
 
 - name: 'Check if Solr is already installed'
   ansible.builtin.stat:
@@ -19,4 +23,13 @@
     src:  'apache.conf'
     dest: '/etc/apache2/sites-enabled/conf.d/solr.conf'
   notify: 'apache_restart'
+
+- name: 'Gzip log files'
+  community.general.xml:
+    path:  '/srv/solr/log4j2.xml'
+    xpath: "//RollingRandomAccessFile[@name='MainLogFile']"
+    attribute: 'filePattern'
+    value: '${sys:solr.log.dir}/solr.log.%i.gz'
+    pretty_print: true
+  notify: 'solr_restart'
 ...

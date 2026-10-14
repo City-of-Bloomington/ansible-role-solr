@@ -30,4 +30,10 @@
     src:  'solr.xml'
     dest: "{{ solr_home }}/data/solr.xml"
   notify: 'solr_restart'
+
+- name: 'Install CRON'
+  ansible.builtin.template:
+    src:  'cron.sh'
+    dest: '/etc/cron.daily/solr'
+    mode: '0755'
 ...
